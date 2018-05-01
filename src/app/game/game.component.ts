@@ -25,4 +25,5 @@ export class GameComponent implements OnInit {
 	public stop(): void {
 		this.game.stop()
 	}
+
 }

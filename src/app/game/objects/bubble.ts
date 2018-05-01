@@ -1,6 +1,6 @@
 import Game from './game'
 import GameObject from './game-object'
-import { IColor } from '../../interfaces/icolor'
+import { IColor } from '../interfaces/icolor'
 
 export default class Bubble extends GameObject {
 

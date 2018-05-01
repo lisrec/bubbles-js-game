@@ -1,7 +1,9 @@
 import Game from './game'
-import { IColor } from '../../interfaces/icolor'
+import { IColor } from '../interfaces/icolor'
 
 export default abstract class GameObject {
+
+	public readonly id: number = new Date().getTime()
 
 	protected ctx: CanvasRenderingContext2D
 

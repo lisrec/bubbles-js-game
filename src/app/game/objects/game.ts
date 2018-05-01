@@ -1,5 +1,7 @@
 import Background from './background'
+import GameObject from './game-object'
 import Bubble from './bubble'
+import ObjectsManager from '../engine/objects-manager'
 
 export default class Game {
 
@@ -7,61 +9,59 @@ export default class Game {
 	public static W_HEIGHT: number = 400
 	public static SCALE: number = 10
 
+	private gameLooper = (window.requestAnimationFrame) ? window.requestAnimationFrame : (c) => setTimeout(c, 16)
+
 	private running: boolean = false
 	private ctx: CanvasRenderingContext2D
 
 	private bg: Background
-	private bubbles: Bubble[]
+	private objManager: ObjectsManager
+
 
 	private update(): void {
 		this.bg.update()
-		for (const bubble of this.bubbles) {
-			bubble.update()
-		}
+		this.objManager.update()
 	}
 
 	private render(): void {
 		this.bg.render()
-		for (const bubble of this.bubbles) {
-			bubble.render()
-		}
+		this.objManager.render()
 	}
 
 	private gameLoop(): void {
-		setTimeout(() => {
-			if (this.running) {
-				this.update()
-				this.render()
-			}
-			this.gameLoop()
-		}, 16.6)
+		if (this.running) {
+			this.update()
+			this.render()
+		}
+		this.gameLooper(this.gameLoop.bind(this))
 	}
 
 	constructor(ctx: CanvasRenderingContext2D) {
 
 		this.ctx = ctx
+		this.objManager = new ObjectsManager()
 
 		this.ctx.canvas.width = Game.W_WIDTH
 		this.ctx.canvas.height = Game.W_HEIGHT
 
 		this.bg = new Background(this.ctx)
-		this.bubbles = [
-			new Bubble(this.ctx, 5, 1),
-			new Bubble(this.ctx, 10, 1),
-			new Bubble(this.ctx, 15, 1),
-			new Bubble(this.ctx, 20, 1),
-			new Bubble(this.ctx, 25, 1),
-			new Bubble(this.ctx, 5, 5),
-			new Bubble(this.ctx, 10, 5),
-			new Bubble(this.ctx, 15, 5),
-			new Bubble(this.ctx, 20, 5),
-			new Bubble(this.ctx, 25, 5),
-			new Bubble(this.ctx, 5, 10),
-			new Bubble(this.ctx, 10, 10),
-			new Bubble(this.ctx, 15, 10),
-			new Bubble(this.ctx, 20, 10),
-			new Bubble(this.ctx, 25, 10)
-		]
+
+		this.objManager.addObject(new Bubble(this.ctx, 5, 1))
+		this.objManager.addObject(new Bubble(this.ctx, 10, 1))
+		this.objManager.addObject(new Bubble(this.ctx, 15, 1))
+		this.objManager.addObject(new Bubble(this.ctx, 20, 1))
+		this.objManager.addObject(new Bubble(this.ctx, 25, 1))
+		this.objManager.addObject(new Bubble(this.ctx, 5, 5))
+		this.objManager.addObject(new Bubble(this.ctx, 10, 5))
+		this.objManager.addObject(new Bubble(this.ctx, 15, 5))
+		this.objManager.addObject(new Bubble(this.ctx, 20, 5))
+		this.objManager.addObject(new Bubble(this.ctx, 25, 5))
+		this.objManager.addObject(new Bubble(this.ctx, 5, 10))
+		this.objManager.addObject(new Bubble(this.ctx, 10, 10))
+		this.objManager.addObject(new Bubble(this.ctx, 15, 10))
+		this.objManager.addObject(new Bubble(this.ctx, 20, 10))
+		this.objManager.addObject(new Bubble(this.ctx, 25, 10))
+
 		this.running = true
 		this.gameLoop()
 	}
@@ -72,6 +72,14 @@ export default class Game {
 
 	public stop(): void {
 		this.running = false
+	}
+
+	public rmObject(id: number): void {
+		this.objManager.removeObject(id)
+	}
+
+	public getObjects(): GameObject[] {
+		return this.objManager.getObjects()
 	}
 
 }
