@@ -20,9 +20,9 @@ export class IColor {
 	private b: UColor
 
 	public static randomColor(): IColor {
-		const r: UColor = <UColor>(Math.random() * 255)
-		const g: UColor = <UColor>(Math.random() * 255)
-		const b: UColor = <UColor>(Math.random() * 255)
+		const r: UColor = <UColor>(Math.random() * 225 + 30)
+		const g: UColor = <UColor>(Math.random() * 225 + 30)
+		const b: UColor = <UColor>(Math.random() * 225 + 30)
 		return new IColor(r, g, b)
 	}
 

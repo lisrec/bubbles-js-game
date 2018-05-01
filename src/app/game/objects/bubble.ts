@@ -1,25 +1,23 @@
-import { IColor } from '../../interfaces/icolor'
 import Game from './game'
+import GameObject from './game-object'
+import { IColor } from '../../interfaces/icolor'
 
-export default class Bubble {
+export default class Bubble extends GameObject {
 
-	private ctx: CanvasRenderingContext2D
-	private color: IColor
-	private posX: number
-	private posY: number
-	private size: number = 5
 	private fullRadius: number = 2 * Math.PI
 
 	constructor(ctx: CanvasRenderingContext2D, x: number, y: number) {
+		super(ctx, x, y, 5)
 		this.color = IColor.randomColor()
-		this.ctx = ctx
-		this.posX = x * Game.SCALE
-		this.posY = y * Game.SCALE
 		this.size = this.size * Game.SCALE
+		this.velocityX = (Math.random() - 0.5) / 2 * Game.SCALE
+		this.velocityY = (Math.random() - 0.5) / 2 * Game.SCALE
 	}
 
 	public update(): void {
-
+		this.posX += this.velocityX
+		this.posY += this.velocityY
+		this.checkWallCollision()
 	}
 
 	public render(): void {

@@ -19,10 +19,10 @@ export class GameComponent implements OnInit {
 	}
 
 	public start(): void {
-
+		this.game.start()
 	}
 
 	public stop(): void {
-
+		this.game.stop()
 	}
 }

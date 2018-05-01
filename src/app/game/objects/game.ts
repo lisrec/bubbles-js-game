@@ -13,15 +13,18 @@ export default class Game {
 	private bg: Background
 	private bubbles: Bubble[]
 
+	private update(): void {
+		this.bg.update()
+		for (const bubble of this.bubbles) {
+			bubble.update()
+		}
+	}
+
 	private render(): void {
 		this.bg.render()
 		for (const bubble of this.bubbles) {
 			bubble.render()
 		}
-	}
-
-	private update(): void {
-		this.bg.update()
 	}
 
 	private gameLoop(): void {
@@ -30,7 +33,8 @@ export default class Game {
 				this.update()
 				this.render()
 			}
-		}, 1)
+			this.gameLoop()
+		}, 16.6)
 	}
 
 	constructor(ctx: CanvasRenderingContext2D) {
@@ -42,11 +46,11 @@ export default class Game {
 
 		this.bg = new Background(this.ctx)
 		this.bubbles = [
-			new Bubble(this.ctx, 5, 0),
-			new Bubble(this.ctx, 10, 0),
-			new Bubble(this.ctx, 15, 0),
-			new Bubble(this.ctx, 20, 0),
-			new Bubble(this.ctx, 25, 0),
+			new Bubble(this.ctx, 5, 1),
+			new Bubble(this.ctx, 10, 1),
+			new Bubble(this.ctx, 15, 1),
+			new Bubble(this.ctx, 20, 1),
+			new Bubble(this.ctx, 25, 1),
 			new Bubble(this.ctx, 5, 5),
 			new Bubble(this.ctx, 10, 5),
 			new Bubble(this.ctx, 15, 5),
@@ -60,6 +64,14 @@ export default class Game {
 		]
 		this.running = true
 		this.gameLoop()
+	}
+
+	public start(): void {
+		this.running = true
+	}
+
+	public stop(): void {
+		this.running = false
 	}
 
 }
