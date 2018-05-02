@@ -1,4 +1,4 @@
-import GameObject from '../objects/game-object'
+import GameObject from './game-object'
 
 export default class ObjectsManager {
 

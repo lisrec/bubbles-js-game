@@ -1,13 +1,18 @@
-import Background from './background'
-import GameObject from './game-object'
-import Bubble from './bubble'
-import ObjectsManager from '../engine/objects-manager'
+import ObjectsManager from './engine/objects-manager'
+import Background from './objects/background'
+import GameObject from './engine/game-object'
+import Bubble from './objects/bubble'
+import StateManager from './utils/state-manager'
+import EventsBus from './engine/events-bus'
+import Hud from './objects/hud'
+import IEvent from './interfaces/ievent'
+import EventListener from './engine/event-listener'
 
-export default class Game {
+export default class Game implements EventListener {
 
-	public static W_WIDTH: number = 600
-	public static W_HEIGHT: number = 400
-	public static SCALE: number = 10
+	public static readonly W_WIDTH: number = 600
+	public static readonly W_HEIGHT: number = 400
+	public static readonly SCALE: number = 10
 
 	private gameLooper = (window.requestAnimationFrame) ? window.requestAnimationFrame : (c) => setTimeout(c, 16)
 
@@ -15,17 +20,21 @@ export default class Game {
 	private ctx: CanvasRenderingContext2D
 
 	private bg: Background
+	private hud: Hud
 	private objManager: ObjectsManager
-
+	private stateMng: StateManager
+	private eventsBus: EventsBus
 
 	private update(): void {
 		this.bg.update()
 		this.objManager.update()
+		this.hud.update()
 	}
 
 	private render(): void {
 		this.bg.render()
 		this.objManager.render()
+		this.hud.render()
 	}
 
 	private gameLoop(): void {
@@ -45,6 +54,13 @@ export default class Game {
 		this.ctx.canvas.height = Game.W_HEIGHT
 
 		this.bg = new Background(this.ctx)
+		this.hud = new Hud(this.ctx)
+
+		this.eventsBus = new EventsBus([this, this.hud])
+		this.eventsBus.sendEvent(new IEvent('SET_HP', {hp: 3}))
+
+		; (<any>window).eventBus = this.eventsBus
+		; (<any>window).IEvent = IEvent
 
 		this.objManager.addObject(new Bubble(this.ctx, 5, 1))
 		this.objManager.addObject(new Bubble(this.ctx, 10, 1))
@@ -64,6 +80,14 @@ export default class Game {
 
 		this.running = true
 		this.gameLoop()
+	}
+
+	public handleEvent(evt: IEvent) {
+		switch (evt.type) {
+			case 'SET_HP':
+				this.running = (evt.data['hp'] > 0)
+				break
+		}
 	}
 
 	public start(): void {

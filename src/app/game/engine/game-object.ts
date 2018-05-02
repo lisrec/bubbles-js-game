@@ -1,7 +1,8 @@
-import Game from './game'
+import Game from '../game'
 import { IColor } from '../interfaces/icolor'
+import RenderableObject from './renderable-object'
 
-export default abstract class GameObject {
+export default abstract class GameObject extends RenderableObject {
 
 	public readonly id: number = new Date().getTime()
 
@@ -30,6 +31,7 @@ export default abstract class GameObject {
 	}
 
 	constructor(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
+		super()
 		this.ctx = ctx
 		this.size = size
 		this.posX = x * Game.SCALE

@@ -1,5 +1,5 @@
 import { IColor } from '../interfaces/icolor'
-import Game from './game'
+import Game from '../game'
 
 export default class Background {
 
